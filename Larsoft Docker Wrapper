@@ -1,0 +1,22 @@
+Larsoft Docker Wrapper 
+Version: ASAP
+
+	General Concept:
+		Wrap docker container in python to handle # of containers, output, and processing steps.
+
+	Steps:
+		1.) Check for # of cores.
+		2.) Make directory structure inside of mount point?
+		2.) Generate jobs for docker containers.
+			2.1.) Specify "config" (prodsingle.fckl -> wiredump.fckl -> some_python.py) 
+			2.2.) Specify output location
+		3.) Save "job" to DB?
+		4.) Trust in FSM that job completes
+
+
+	Config Presets:
+		1.) prodsingle.fckl -> wiredump.fckl -> some_python.py
+
+	Future Ideas:
+		Spilt files, compile a hash, and scp to share (port 22 restriction)
+

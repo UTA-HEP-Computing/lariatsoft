@@ -1,0 +1,20 @@
+Helpful things
+
+
+docker ps -a | grep ago | awk '{print $1}' | xargs docker rm
+
+docker images | grep '<none>' | awk '{print $3}' | xargs docker rmi
+
+
+python larsoft_docker_wrapper.py /data/wghilliard/test one 1 1
+
+python /products/preset/{0}.py {1} {2}'.format(preset, count, event_count)
+
+
+docker exec -it ac66457e91252f418cce8a0560fde95040a68e47cccf9423453e0109d5e3d070 bash -c "source /etc/lariatsoft_setup.sh && python /products/presets/one.py 1 1"
+
+docker exec -it fe259f88798c bash -c "python one.py 1 1"
+
+
+docker run --rm -dv /data/wghilliard/test:/data wghilliard/lar_test:latest /bin/bash -c 'source /etc/lariatsoft_setup.sh && python /products/presets/one.py 1 1'
+docker run -dv /data/wghilliard/test:/data wghilliard/lar_test:latest /bin/bash -c 'source /etc/lariatsoft_setup.sh && python /products/presets/one.py 1 1'

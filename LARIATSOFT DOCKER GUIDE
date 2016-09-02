@@ -1,0 +1,74 @@
+LARIATSOFT DOCKER GUIDE
+Author: W. Grayson Hilliard <grsn.hilliard@gmail.com>
+
+Docker User Guide: https://docs.docker.com/engine/userguide/
+Docker Quick Reference: https://docs.docker.com/engine/reference/run/
+Grayson's Docker Images: https://hub.docker.com/u/wghilliard/
+
+
+If on OSX, do this first!
+	$ bash /Applications/Docker/Docker\ Quickstart\ Terminal.app/Contents/Resources/Scripts/start.sh
+
+1.)
+	a.) Start a new docker container:
+		$ docker run -itv /data:/data wghilliard/lariatsoft
+			# Note: The '-v /data:/data' is the volume mount point, syntax is as follows '-v <source>:<docker_destination>'
+
+	OR
+
+	b.) Start an existing docker container:
+		$ docker ps -a
+		$ docker start CONTAINER_ID
+		$ docker attach CONTAINER_ID
+
+----DEPRECIATED, DO NOT USE----
+2.) Setup Lariatsoft Enviournment:
+	$ cd /products
+	$ source setup
+	$ setup gitflow
+	$ setup mrb
+	$ setup ninja v1_6_0a
+	$ setup lariatsoft v04_35_00 -q e9:prof
+	$ source ./dev/localProducts_lariatsoft_v04_35_00_e9_prof/setup
+-------------------------------
+
+3.) (Optional) Make an out directory:
+	$ mkdir /data/<user_name>/out
+		# Note: The directory will change if the mount volume specified eariler is changed.
+
+GENERAL NOTES:
+- Data transfer into and out of the docker container is most easily done via the mount point, however scp is also and option. https://docs.docker.com/machine/reference/scp/
+- Docker containers by default have access to all system resources, however constraints can be added. https://docs.docker.com/engine/reference/run/#runtime-constraints-on-resources
+- lar -c will produce a segmentation fault if the fickle file passed as an argument is not in the $MRB_TOP directory.
+
+FUTURE PLANS:
+- Automated lariatsoft environment setup.
+- Built-in self testing.
+- Container size reduction.
+
++++ Disclaimer +++
+These may / will not be accurate depending on the version and branch feature you want to build. "mrbsetenv" does not work inside of the Docker container and therefore you must do the setup by hand. See the "SPECIFIC VERSION / BRANCH STEPS" section for more info.
+
+MODULE BUILD STEPS:
+	BASE STEPS:
+		$ setup mrb
+		$ setup gitflow
+		$ setup lariatsoft v04_36_01 -q e9:prof
+		$ mkdir ./dev && cd ./dev
+		$ export MRB_PROJECT=lariatsoft
+		$ mrb newDev -v 04_36_01 -q e9:prof
+		$ source /products/dev/localProducts_lariatsoft_04_36_01_e9_prof/setup
+
+	SPECIFIC VERSION / BRANCH STEPS:
+		$ cd ./srcs/
+		$ mrb gitCheckout -t v04_36_01 -b feature/asaadi_imageWork http://cdcvs.fnal.gov/projects/lariatsoft
+		$ setup cmake 3_3_2
+		$ setup $(ups active | grep lariatfragments | awk '{print $1 " " $2 " " $5 " " $6}')
+		$ setup $(ups active | grep artdaq_core | awk '{print $1 " " $2 " " $5 " " $6}')
+		$ mrbsetenv
+		$ export UPS_OVERRIDE="-H Linux64bit+2.6-2.12"
+		$ mrb i -j10 
+			// Where -j is how many cores!
+		$ source /products/dev/localProducts_lariatsoft_04_36_01_e9_prof/setup
+		$ export FHICL_FILE_PATH=:/products/dev/localProducts_lariatsoft_04_36_01_e9_prof/lariatsoft/v04_36_01/fcl/:$FHICL_FILE_PATH
+		$ export LD_LIBRARY_PATH=:/products/dev/localProducts_lariatsoft_04_36_01_e9_prof/lariatsoft/v04_36_01/slf6.x86_64.e9.prof/lib/:$LD_LIBRARY_PATH
